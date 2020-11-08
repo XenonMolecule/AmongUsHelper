@@ -1,5 +1,8 @@
 import pyautogui
 import cv2
+import os
+import time
+import numpy as np
 
 CREW_ONE = (1163, 1013, 314, 570)
 CREW_TWO = (1875, 1018, 311, 541)
@@ -16,8 +19,12 @@ CREW_POSITIONS = [CREW_ONE, CREW_TWO, CREW_THREE, CREW_FOUR, CREW_FIVE,
 
 
 def segment_crew(crew_count):
-    # screen = np.array(pyautogui.screenshot())
-    screen = cv2.imread("segmentation_test.png")
+    for f in os.listdir("./player_imgs/"):
+        os.remove(os.path.join("./player_imgs/", f))
+
+    screen = np.array(pyautogui.screenshot())
+    cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    # screen = cv2.imread("segmentation_test.png")
 
     for i in range(crew_count):
         pos = CREW_POSITIONS[i]
@@ -26,4 +33,5 @@ def segment_crew(crew_count):
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(image, 1))
 
 
+time.sleep(4)
 segment_crew(9)
