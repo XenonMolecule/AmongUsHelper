@@ -5,7 +5,7 @@ import os
 
 def detect_crewmates():
     for img_obj in os.scandir("./player_imgs/"):
-        if pyautogui.locateOnScreen("./player_imgs/" + img_obj.name, grayscale=False, confidence=.5):
+        if pyautogui.locateOnScreen("./player_imgs/" + img_obj.name, grayscale=False, confidence=.35):
             print(img_obj.name[4])
 
 while True:

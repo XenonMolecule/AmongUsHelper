@@ -9,8 +9,8 @@ start = datetime.now()
 
 CREW_ONE = (1163, 1013, 314, 570)
 CREW_TWO = (1875, 1018, 311, 541)
-CREW_THREE = (918, 1089, 253, 395)
-CREW_FOUR = (2188, 1055, 258, 431)
+CREW_THREE = (2188, 1055, 258, 431)
+CREW_FOUR = (918, 1089, 253, 395)
 CREW_FIVE = (709, 1090, 215, 315)
 CREW_SIX = (2434, 1123, 220, 289)
 CREW_SEVEN = (563, 1055, 160, 280)
@@ -33,11 +33,14 @@ def segment_crew(crew_count):
     for i in range(crew_count):
         pos = CREW_POSITIONS[i]
         image = screen[pos[1]:pos[1] + pos[3], pos[0]:pos[0] + pos[2]]
-        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", image)
-        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(image, 1))
+        scale_percent = 205.0 / image.shape[0]
+        width = int(image.shape[1] * scale_percent)
+        height = int(image.shape[0] * scale_percent)
+        dim = (width, height)
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", resized)
+        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(resized, 1))
 
-    cv2.imshow("test", screen)
-    cv2.waitKey(0)
 
 
 while True:
