@@ -60,6 +60,9 @@ class ColorReader:
             for i in range(len(list_colors)):
                 squared_dist = np.sum((unknown_color-list_colors[i])**2, axis=0)
                 dist = np.sqrt(squared_dist)
+                if  abs(unknown_color[0] - unknown_color[1]) < 20 and abs(unknown_color[0] - unknown_color[2]) < 20 and unknown_color[0] > 90:
+                    shortest_dist = 0
+                    color_text = "white"
                 if  abs(unknown_color[0] - unknown_color[1]) < 5 and abs(unknown_color[0] - unknown_color[2]) > 20:
                     shortest_dist = 0
                     color_text = "yellow"
