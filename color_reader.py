@@ -83,9 +83,14 @@ class ColorReader:
                     elif shortest_dist > dist and list_colortexts[i] not in used_colors:
                         shortest_dist = dist
                         color_text = list_colortexts[i]
+                        if pos_num == 4:
+                            player_color = list_colortexts[i]
 
                 used_colors.append(color_text)
                 print(color_text)
                 num_crewmates += 1
 
+        num_crewmates -= 1
         print("\nNumber of crewmantes: " + str(num_crewmates))
+        used_colors.remove(player_color)
+        print(used_colors)
