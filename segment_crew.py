@@ -24,6 +24,7 @@ def segment_crew(crew_count):
 
     screen = np.array(pyautogui.screenshot())
     cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    screen = cv2.resize(screen, dsize=(3360, 2100), interpolation=cv2.INTER_CUBIC)
     # screen = cv2.imread("segmentation_test.png")
 
     for i in range(crew_count):
