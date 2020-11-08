@@ -1,9 +1,13 @@
 from datetime import datetime
-import pyautogui
 import cv2
 import os
+import pytesseract
+import pyautogui
 import time
 import numpy as np
+from fuzzywuzzy import fuzz
+from skimage.filters import threshold_otsu
+from skimage.color import rgb2gray
 
 start = datetime.now()
 
@@ -19,6 +23,26 @@ CREW_NINE = (2799, 1054, 91, 205)
 
 CREW_POSITIONS = [CREW_ONE, CREW_TWO, CREW_THREE, CREW_FOUR, CREW_FIVE,
                   CREW_SIX, CREW_SEVEN, CREW_EIGHT, CREW_NINE]
+
+# INITIALIZE SETTINGS
+ROOM_TEXT_START_X = 1330
+ROOM_TEXT_START_Y = 1817
+ROOM_TEXT_WIDTH = 685
+ROOM_TEXT_HEIGHT = 140
+
+SNIP_REGION = (
+    ROOM_TEXT_START_X,
+    ROOM_TEXT_START_Y,
+    ROOM_TEXT_WIDTH,
+    ROOM_TEXT_HEIGHT
+)
+
+ROOMS = ["Cafeteria", "Weapons", "O2", "Navigation",
+         "Shields", "Communications", "Storage", "Admin",
+         "Electrical", "Lower Engine", "Security", "Reactor",
+         "Upper Engine", "Medbay"]
+
+MIN_STRING_MATCH_RATIO = 60
 
 
 def segment_crew(crew_count):
@@ -41,7 +65,39 @@ def segment_crew(crew_count):
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", resized)
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(resized, 1))
 
+    cv2.imshow("bruh", screen)
+    cv2.waitKey(0)
 
+
+# Returns the best guess for the room that the player is in or None if it can't get a good guess
+def getPlayerRoom():
+    im = pyautogui.screenshot(region=SNIP_REGION)
+
+    gray_img = rgb2gray(np.array(im))
+
+    image = gray_img < threshold_otsu(gray_img, 32)
+    # in order to apply Tesseract v4 to OCR text we must supply
+    # (1) a language, (2) an OEM flag of 4, indicating that the we
+    # wish to use the LSTM neural net model for OCR, and finally
+    # (3) an OEM value, in this case, 7 which implies that we are
+    # treating the ROI as a single line of text
+    config = ("-l eng --oem 1 --psm 7")
+    text = pytesseract.image_to_string(image, config=config)
+
+    best_ratio = MIN_STRING_MATCH_RATIO
+    room = None
+    for room_name in ROOMS:
+        ratio = fuzz.ratio(room_name.lower(), text.lower())
+        if ratio > best_ratio:
+            best_ratio = ratio
+            room = room_name
+
+    return room
+
+def detect_crewmates():
+    for img_obj in os.scandir("./player_imgs/"):
+        if pyautogui.locateOnScreen("./player_imgs/" + img_obj.name, grayscale=False, confidence=.35):
+            print(img_obj.name[4])
 
 while True:
     time.sleep(0.1)
