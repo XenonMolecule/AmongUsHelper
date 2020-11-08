@@ -22,8 +22,8 @@ def segment_crew(crew_count):
     for i in range(crew_count):
         pos = CREW_POSITIONS[i]
         image = screen[pos[1]:pos[1] + pos[3], pos[0]:pos[0] + pos[2]]
-        cv2.imwrite("crew" + str(i + 1) + "-1.png", image)
-        cv2.imwrite("crew" + str(i + 1) + "-2.png", cv2.flip(image, 1))
+        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", image)
+        cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(image, 1))
 
 
 segment_crew(9)
