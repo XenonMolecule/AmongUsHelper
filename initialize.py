@@ -19,5 +19,6 @@ while True:
 
 time.sleep(4.63)
 screen = np.array(pyautogui.screenshot())
+cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
 cv2.imshow("bruh", screen)
 cv2.waitKey(0)
