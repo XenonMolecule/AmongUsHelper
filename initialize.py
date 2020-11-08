@@ -4,7 +4,6 @@ import cv2
 import os
 import time
 import numpy as np
-from skimage.transform import resize
 
 start = datetime.now()
 
@@ -43,7 +42,7 @@ def segment_crew(crew_count):
 
 while True:
     time.sleep(0.1)
-    if pyautogui.locateOnScreen('shh-xenon.png', grayscale=False, confidence=.5):
+    if pyautogui.locateOnScreen('shh-xenon.png', grayscale=False, confidence=.5): # shh_small
         break
 
     # elif (datetime.now() - start).seconds > 30:
@@ -52,6 +51,6 @@ while True:
     else:
         print('No shh detected')
 print("Saw shh")
-time.sleep(4)
+time.sleep(2.66) # 4.66
 
-segment_crew(4)
+segment_crew(3)
