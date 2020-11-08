@@ -45,7 +45,7 @@ def segment_crew(crew_count):
 
 while True:
     time.sleep(0.1)
-    if pyautogui.locateOnScreen('shh-xenon.png', grayscale=False, confidence=.5): # shh_small
+    if pyautogui.locateOnScreen('crewtext-xenon.png', grayscale=False, confidence=.5): # shh_small
         break
 
     # elif (datetime.now() - start).seconds > 30:
@@ -54,6 +54,6 @@ while True:
     else:
         print('No shh detected')
 print("Saw shh")
-time.sleep(1) # 2.66
+# time.sleep(1) # 2.66
 
 segment_crew(3)
