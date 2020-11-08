@@ -35,10 +35,13 @@ def segment_crew(crew_count):
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", image)
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(image, 1))
 
+    cv2.imshow("test", screen)
+    cv2.waitKey(0)
+
 
 while True:
     time.sleep(0.1)
-    if pyautogui.locateOnScreen('shh-xenon.png', grayscale=False, confidence=.63):
+    if pyautogui.locateOnScreen('shh-xenon.png', grayscale=False, confidence=.5):
         break
 
     # elif (datetime.now() - start).seconds > 30:
@@ -47,6 +50,6 @@ while True:
     else:
         print('No shh detected')
 print("Saw shh")
-time.sleep(4.63)
+time.sleep(4.25)
 
 segment_crew(4)
