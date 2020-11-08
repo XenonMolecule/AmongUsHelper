@@ -65,8 +65,8 @@ def segment_crew(crew_count):
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-1.png", resized)
         cv2.imwrite("player_imgs/crew" + str(i + 1) + "-2.png", cv2.flip(resized, 1))
 
-    cv2.imshow("bruh", screen)
-    cv2.waitKey(0)
+    # cv2.imshow("bruh", screen)
+    # cv2.waitKey(0)
 
 
 # Returns the best guess for the room that the player is in or None if it can't get a good guess
@@ -75,14 +75,23 @@ def getPlayerRoom():
 
     gray_img = rgb2gray(np.array(im))
 
-    image = gray_img < threshold_otsu(gray_img, 32)
+    image = gray_img
+    try:
+        image = gray_img < threshold_otsu(gray_img, 32)
+    except:
+        pass
+
     # in order to apply Tesseract v4 to OCR text we must supply
     # (1) a language, (2) an OEM flag of 4, indicating that the we
     # wish to use the LSTM neural net model for OCR, and finally
     # (3) an OEM value, in this case, 7 which implies that we are
     # treating the ROI as a single line of text
     config = ("-l eng --oem 1 --psm 7")
-    text = pytesseract.image_to_string(image, config=config)
+    text = ""
+    try:
+        text = pytesseract.image_to_string(image, config=config)
+    except:
+        pass
 
     best_ratio = MIN_STRING_MATCH_RATIO
     room = None
@@ -94,10 +103,10 @@ def getPlayerRoom():
 
     return room
 
-def detect_crewmates():
+def detect_crewmates(room):
     for img_obj in os.scandir("./player_imgs/"):
         if pyautogui.locateOnScreen("./player_imgs/" + img_obj.name, grayscale=False, confidence=.35):
-            print(img_obj.name[4])
+            print("CREW" + img_obj.name[4] + " - " + room)
 
 while True:
     time.sleep(0.1)
@@ -113,3 +122,14 @@ print("Saw shh")
 # time.sleep(1) # 2.66
 
 segment_crew(3)
+
+last_room = "Cafeteria"
+while True:
+    time.sleep(0.1)
+    new_room = getPlayerRoom()
+    if new_room:
+        if last_room != new_room:
+            print("Just entered " + new_room)
+        last_room = new_room
+    detect_crewmates(last_room)
+
