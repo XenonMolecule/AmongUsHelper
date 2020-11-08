@@ -54,6 +54,6 @@ while True:
     else:
         print('No shh detected')
 print("Saw shh")
-time.sleep(2.66) # 4.66
+time.sleep(1) # 2.66
 
 segment_crew(3)
